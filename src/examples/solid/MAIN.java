@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 
 public class MAIN
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws InterruptedException
     {
 
         //Initialization of example data
@@ -64,16 +64,34 @@ public class MAIN
 
         Consumer<BaseAnimal> animalConsumer = animal -> { if( System.nanoTime() % 5 == 0 ) { animal.doNoise(); } animal.move(); };
 
-        zoo.getSwimmableAreas().stream().peek( iSwimmable -> System.out.println(iSwimmable.getName()+" Water temperature "+iSwimmable.getWaterTemperature())).flatMap( iSwimmable -> iSwimmable.getAnimals().stream()).forEach( animalConsumer );
-        System.out.println("---\r\n");
+        while( true )
+        {
 
 
-        zoo.getFlyableAreas().stream().peek( iFlyable -> System.out.println(iFlyable.getName()+" Air condition is "+iFlyable.getAirCondition())).flatMap( iFlyable -> iFlyable.getAnimals().stream()).forEach( animalConsumer );
-        System.out.println("---\r\n");
+            if( System.nanoTime() % 2 == 0 )
+            {
+                zoo.getSwimmableAreas().stream().peek( iSwimmable -> System.out.println(iSwimmable.getName()+" Water temperature "+iSwimmable.getWaterTemperature())).flatMap( iSwimmable -> iSwimmable.getAnimals().stream()).forEach( animalConsumer );
+                System.out.println("---\r\n");
 
+            }
 
-        zoo.getWalkableAreas().stream().peek( iWalkable -> System.out.println(iWalkable.getName()+" area is "+(iWalkable.isAreaClear() ? "" : "NOT ")+" clear !")).flatMap( iWalkable -> iWalkable.getAnimals().stream()).forEach( animalConsumer );
-        System.out.println("---\r\n");
+            if( System.nanoTime() % 3 == 0 )
+            {
+                zoo.getFlyableAreas().stream().peek( iFlyable -> System.out.println(iFlyable.getName()+" Air condition is "+iFlyable.getAirCondition())).flatMap( iFlyable -> iFlyable.getAnimals().stream()).forEach( animalConsumer );
+                System.out.println("---\r\n");
+
+            }
+
+            if( System.nanoTime() % 5 == 0 )
+            {
+                zoo.getWalkableAreas().stream().peek( iWalkable -> System.out.println(iWalkable.getName()+" area is "+(iWalkable.isAreaClear() ? "" : "NOT ")+" clear !")).flatMap( iWalkable -> iWalkable.getAnimals().stream()).forEach( animalConsumer );
+                System.out.println("---\r\n");
+
+            }
+
+            Thread.sleep(1000L * (System.nanoTime() % 10));
+
+        }
 
 
     }
